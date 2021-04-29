@@ -486,6 +486,7 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             _currentIndex = value;
           });
+          navigatorPage();
         },
         items: [
           BottomNavigationBarItem(
@@ -512,5 +513,19 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+// TODO: move for viewmodel
+  navigatorPage() {
+    switch (_currentIndex) {
+      case 0:
+        Navigator.pushNamed(
+            context, '/newBoleto');
+        break;
+      case 1:
+        break;
+      case 2:
+        break;
+    }
   }
 }

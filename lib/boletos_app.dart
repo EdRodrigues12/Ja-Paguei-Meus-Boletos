@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'file:///C:/Users/Win/IdeaProjects/ja_paguei_meus_boletos/lib/ui/splash/splash_page.dart';
 import 'package:ja_paguei_meus_boletos/core/constants/string.dart';
+import 'package:ja_paguei_meus_boletos/core/routes/router.dart' as router;
 
 class BoletosApp extends StatelessWidget {
   @override
@@ -14,6 +15,8 @@ class BoletosApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: boletosAppTittle,
+      onGenerateRoute: router.generateRoute,
+      initialRoute: '/',
       theme: ThemeData(
           visualDensity: VisualDensity.adaptivePlatformDensity,
           accentColor: Colors.deepPurple,
