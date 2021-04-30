@@ -523,8 +523,12 @@ class _HomePageState extends State<HomePage> {
             context, '/newBoleto');
         break;
       case 1:
+        Navigator.pushNamed(
+            context, '/credit');
         break;
       case 2:
+        Navigator.pushNamed(
+            context, '/financesChannel');
         break;
     }
   }

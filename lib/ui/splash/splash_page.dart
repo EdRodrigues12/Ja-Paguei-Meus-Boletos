@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ja_paguei_meus_boletos/core/constants/colors.dart';
 import 'package:ja_paguei_meus_boletos/core/constants/dimens.dart';
 import 'package:ja_paguei_meus_boletos/core/constants/string.dart';
 import 'package:ja_paguei_meus_boletos/ui/home/home_page.dart';
@@ -27,8 +26,8 @@ Widget _introScreen() {
         SplashScreen(
           seconds: 3,
           navigateAfterSeconds: HomePage(),
-          backgroundColor: darkPrimaryColor,
-          loaderColor: darkPrimaryColor,
+          backgroundColor: Colors.deepPurple,
+          loaderColor: Colors.deepPurple,
         ),
         Container(
           width: double.infinity,
