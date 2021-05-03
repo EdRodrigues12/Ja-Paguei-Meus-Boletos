@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ja_paguei_meus_boletos/core/constants/string.dart';
 
+import 'home_viewmodel.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -11,6 +13,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Map> _customColors = new List();
   int _currentIndex = 0;
+  final vm = HomeViewModel();
 
   @override
   void initState() {

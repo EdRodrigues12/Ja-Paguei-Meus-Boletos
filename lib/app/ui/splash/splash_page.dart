@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ja_paguei_meus_boletos/app/ui/home/home_page.dart';
 import 'package:ja_paguei_meus_boletos/core/constants/dimens.dart';
 import 'package:ja_paguei_meus_boletos/core/constants/string.dart';
-import 'package:ja_paguei_meus_boletos/ui/home/home_page.dart';
 import 'package:splashscreen/splashscreen.dart';
 
 class SplashPage extends StatefulWidget {
