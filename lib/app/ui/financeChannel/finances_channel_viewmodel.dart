@@ -7,7 +7,7 @@ class FinancesChannelViewModel = _FinancesChannelViewModelBase
     with _$FinancesChannelViewModel;
 
 abstract class _FinancesChannelViewModelBase with Store {
-  NewsContainerRepository repository = NewsContainerRepository();
+  FinancesChannelRepository repository = FinancesChannelRepository();
 
   @action
   Future<List<YoutubeChannel>> getData() async {

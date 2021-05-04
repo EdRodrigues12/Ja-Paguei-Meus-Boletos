@@ -5,7 +5,7 @@ import 'package:ja_paguei_meus_boletos/app/model/youtube_channels.dart';
 import 'package:ja_paguei_meus_boletos/app/service/api/api_client.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
-class NewsContainerRepository {
+class FinancesChannelRepository {
   final ApiClient serviceApi = ApiClient();
 
   Future<List<YoutubeChannel>> getChannels() async {
