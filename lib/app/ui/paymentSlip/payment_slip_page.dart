@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:ja_paguei_meus_boletos/app/model/payment_slip.dart';
+import 'package:ja_paguei_meus_boletos/app/ui/paymentSlip/payment_slip_viewmodel.dart';
 import 'package:ja_paguei_meus_boletos/core/constants/string.dart';
 import 'package:ja_paguei_meus_boletos/core/util/format_date.dart';
 import 'package:spinner_input/spinner_input.dart';
@@ -12,10 +14,12 @@ class PaymentSlipPage extends StatefulWidget {
 
 class _PaymentSlipPageState extends State<PaymentSlipPage> {
   double spinner = 0;
+  var vm = PaymentSlipViewModel();
   final _formKey = new GlobalKey<FormState>();
   final TextEditingController _valueController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   final MoneyMaskedTextController _moneyController = new MoneyMaskedTextController(precision: 2, leftSymbol: 'R\$ ');
+  final TextEditingController _parcelasController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -144,6 +148,7 @@ class _PaymentSlipPageState extends State<PaymentSlipPage> {
                       onChange: (newValue) {
                         setState(() {
                           spinner = newValue;
+                          _parcelasController.text = newValue.toString();
                         });
                       },
                     ),
@@ -153,7 +158,15 @@ class _PaymentSlipPageState extends State<PaymentSlipPage> {
                     child: FloatingActionButton.extended(
                       label: Text(saveButton),
                       onPressed: () {
-                        if (_formKey.currentState.validate()) {}
+                        vm.getPaymentSlip();
+                        if (_formKey.currentState.validate()) {
+                          final String description = _valueController.text;
+                          final DateTime date= DateTime.tryParse( _dateController.text);
+                          final double value = double.tryParse(_moneyController.text);
+                          final int parcelas = int.tryParse(_parcelasController.text);
+                          final PaymentSlip newPaymentSlip = PaymentSlip(0, description, date, value, parcelas);
+                          vm.save(newPaymentSlip, context);
+                        }
                       },
                     ),
                   ),
