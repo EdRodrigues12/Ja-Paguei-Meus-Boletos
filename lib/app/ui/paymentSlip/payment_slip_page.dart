@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-import 'package:ja_paguei_meus_boletos/app/model/payment_slip.dart';
 import 'package:ja_paguei_meus_boletos/app/ui/paymentSlip/payment_slip_viewmodel.dart';
 import 'package:ja_paguei_meus_boletos/core/constants/string.dart';
 import 'package:ja_paguei_meus_boletos/core/util/format_date.dart';
@@ -18,7 +17,7 @@ class _PaymentSlipPageState extends State<PaymentSlipPage> {
   final _formKey = new GlobalKey<FormState>();
   final TextEditingController _valueController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
-  final MoneyMaskedTextController _moneyController = new MoneyMaskedTextController(precision: 2, leftSymbol: 'R\$ ');
+  final MoneyMaskedTextController _moneyController = new MoneyMaskedTextController(precision: 2, decimalSeparator: '.', leftSymbol: 'R\$ ');
   final TextEditingController _parcelasController = TextEditingController();
 
   @override
@@ -85,13 +84,13 @@ class _PaymentSlipPageState extends State<PaymentSlipPage> {
                         ),
                       ),
                       onTap: () async {
-                        var date = await showDatePicker(
+                          var date = await showDatePicker(
                           context: context,
                           initialDate: DateTime.now(),
                           firstDate: DateTime(1900),
                           lastDate: DateTime(2100),
                         );
-                        _dateController.text = formatDate(date);
+                        _dateController.text = formatDateBr(date);
                       },
                       validator: (value) {
                         if (value.isEmpty) return requiredField;
@@ -148,7 +147,7 @@ class _PaymentSlipPageState extends State<PaymentSlipPage> {
                       onChange: (newValue) {
                         setState(() {
                           spinner = newValue;
-                          _parcelasController.text = newValue.toString();
+                          _parcelasController.text = newValue.toInt().toString();
                         });
                       },
                     ),
@@ -160,12 +159,16 @@ class _PaymentSlipPageState extends State<PaymentSlipPage> {
                       onPressed: () {
                         vm.getPaymentSlip();
                         if (_formKey.currentState.validate()) {
-                          final String description = _valueController.text;
-                          final DateTime date= DateTime.tryParse( _dateController.text);
-                          final double value = double.tryParse(_moneyController.text);
-                          final int parcelas = int.tryParse(_parcelasController.text);
-                          final PaymentSlip newPaymentSlip = PaymentSlip(0, description, date, value, parcelas);
-                          vm.save(newPaymentSlip, context);
+                          final double value =
+                              double.tryParse(_moneyController.text.replaceAll(
+                            'R\$',
+                            '',
+                          ));
+                          final int parcelas =
+                              int.tryParse(_parcelasController.text);
+
+                          vm.save(0, _valueController.text, _dateController.text, value,
+                              parcelas, context);
                         }
                       },
                     ),

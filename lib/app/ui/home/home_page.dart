@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ja_paguei_meus_boletos/core/constants/string.dart';
-
+import 'package:ja_paguei_meus_boletos/app/ui/paymentSlip/payment_slip_viewmodel.dart';
 import 'home_viewmodel.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,6 +14,7 @@ class _HomePageState extends State<HomePage> {
   List<Map> _customColors = new List();
   int _currentIndex = 0;
   final vm = HomeViewModel();
+  final vmPayment = PaymentSlipViewModel();
 
   @override
   void initState() {
@@ -105,13 +106,30 @@ class _HomePageState extends State<HomePage> {
                                           color: _customColors[0]['bkg'],
                                           shape: BoxShape.circle,
                                         ),
-                                        child: Center(
-                                          child: Text(
-                                            '5',
-                                            style: TextStyle(
-                                                color: _customColors[0]
-                                                    ['primary']),
-                                          ),
+                                        child: FutureBuilder(
+                                          future: vmPayment.getPaymentSlip(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.hasData) {
+                                              return Center(
+                                                child: Text(
+                                                  snapshot.data.length
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                      color: _customColors[0]
+                                                          ['primary']),
+                                                ),
+                                              );
+                                            } else {
+                                              return Center(
+                                                child: Text(
+                                                  '',
+                                                  style: TextStyle(
+                                                      color: _customColors[0]
+                                                          ['primary']),
+                                                ),
+                                              );
+                                            }
+                                          },
                                         ),
                                       ),
                                     ],
@@ -489,7 +507,7 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             _currentIndex = value;
           });
-          navigatorPage();
+          vm.navigatorPage(_currentIndex, context);
         },
         items: [
           BottomNavigationBarItem(
@@ -516,23 +534,5 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
-  }
-
-// TODO: move for viewmodel
-  navigatorPage() {
-    switch (_currentIndex) {
-      case 0:
-        Navigator.pushNamed(
-            context, '/newBoleto');
-        break;
-      case 1:
-        Navigator.pushNamed(
-            context, '/credit');
-        break;
-      case 2:
-        Navigator.pushNamed(
-            context, '/financesChannel');
-        break;
-    }
   }
 }

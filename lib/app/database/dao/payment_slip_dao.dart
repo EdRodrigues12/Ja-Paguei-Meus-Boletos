@@ -8,7 +8,7 @@ class PaymentSlipDao {
   static const String tableSql = 'CREATE TABLE $_tableName('
       '$_id INTEGER PRIMARY KEY, '
       '$_description TEXT, '
-      '$_date DATETIME, '
+      '$_date TEXT, '
       '$_value DOUBLE, '
       '$_parcelas INTEGER)';
   static const String _tableName = 'paymentsSlip';

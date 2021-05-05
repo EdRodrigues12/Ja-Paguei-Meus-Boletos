@@ -38,7 +38,8 @@ class _FinanceChannelPageState extends State<FinanceChannelPage> {
               child: FutureBuilder<List<YoutubeChannel>>(
                   future: vm.getData(),
                   builder: (context, snapshot) {
-                    return ListView.builder(
+                    if (snapshot.hasData) {
+                      return ListView.builder(
                         scrollDirection: Axis.vertical,
                         itemBuilder: (context, i) {
                           return GestureDetector(
@@ -100,7 +101,8 @@ class _FinanceChannelPageState extends State<FinanceChannelPage> {
                                                   ),
                                                   //descricao
                                                   Text(
-                                                    snapshot.data[i].description,
+                                                    snapshot
+                                                        .data[i].description,
                                                     maxLines: 8,
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
@@ -129,7 +131,13 @@ class _FinanceChannelPageState extends State<FinanceChannelPage> {
                             ),
                           );
                         },
-                      itemCount: snapshot.data.length,);
+                        itemCount: snapshot.data.length,
+                      );
+                    } else {
+                      return Scaffold(
+                        body: Center(child: CircularProgressIndicator()),
+                      );
+                    }
                   }),
             ),
           ],

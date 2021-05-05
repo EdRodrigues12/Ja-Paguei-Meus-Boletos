@@ -1,7 +1,7 @@
 class PaymentSlip {
   final int id;
   final String description;
-  final DateTime date;
+  final String date;
   final double value;
   final int parcelas;
 
