@@ -4,6 +4,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:ja_paguei_meus_boletos/core/constants/string.dart';
 import 'package:ja_paguei_meus_boletos/app/ui/paymentSlip/payment_slip_viewmodel.dart';
 import 'home_viewmodel.dart';
+import 'package:ja_paguei_meus_boletos/app/ui/credit/credit_viewmodel.dart';
+import 'package:ja_paguei_meus_boletos/core/util/format_values.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,6 +17,7 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final vm = HomeViewModel();
   final vmPayment = PaymentSlipViewModel();
+  var vmCredit = CreditViewModel();
 
   @override
   void initState() {
@@ -444,44 +447,122 @@ class _HomePageState extends State<HomePage> {
                                                 fontSize: screenSize.width / 20,
                                                 fontWeight: FontWeight.bold)),
                                       ),
-                                      ListTile(
-                                        dense: true,
-                                        leading: SvgPicture.asset(
-                                            'assets/svg/Design/Rectangle.svg',
-                                            color: Colors.redAccent),
-                                        title: Text(
-                                          'Geral: R\$ 45.000.00',
-                                          style: TextStyle(
-                                              fontSize: screenSize.width / 24,
-                                              color: Colors.redAccent,
-                                              fontWeight: FontWeight.bold),
-                                        ),
+                                      FutureBuilder<Map<String, dynamic>>(
+                                        future: vmPayment.getTotalDebt(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            return Column(
+                                              children: [
+                                                ListTile(
+                                                  dense: true,
+                                                  leading: SvgPicture.asset(
+                                                      'assets/svg/Design/Rectangle.svg',
+                                                      color: Colors.redAccent),
+                                                  title: Text(
+                                                    'Geral: ' +
+                                                        formatMoneyBr(snapshot
+                                                            .data.values.first),
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            screenSize.width /
+                                                                24,
+                                                        color: Colors.redAccent,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                                ListTile(
+                                                  dense: true,
+                                                  leading: SvgPicture.asset(
+                                                      'assets/svg/Design/Rectangle.svg',
+                                                      color: Colors.redAccent),
+                                                  title: Text(
+                                                    'Mês: ' +
+                                                        formatMoneyBr(snapshot
+                                                            .data.values.last),
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            screenSize.width /
+                                                                24,
+                                                        color: Colors.redAccent,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          } else {
+                                            return Column(
+                                              children: [
+                                                ListTile(
+                                                  dense: true,
+                                                  leading: SvgPicture.asset(
+                                                      'assets/svg/Design/Rectangle.svg',
+                                                      color: Colors.redAccent),
+                                                  title: Text(
+                                                    'Geral: R\$ 0.00',
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            screenSize.width /
+                                                                24,
+                                                        color: Colors.redAccent,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                                ListTile(
+                                                  dense: true,
+                                                  leading: SvgPicture.asset(
+                                                      'assets/svg/Design/Rectangle.svg',
+                                                      color: Colors.redAccent),
+                                                  title: Text(
+                                                    'Mês: R\$ 0.00',
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            screenSize.width /
+                                                                24,
+                                                        color: Colors.redAccent,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          }
+                                        },
                                       ),
-                                      ListTile(
-                                        dense: true,
-                                        leading: SvgPicture.asset(
-                                            'assets/svg/Design/Rectangle.svg',
-                                            color: Colors.redAccent),
-                                        title: Text(
-                                          'Mês: R\$ 5.000.00',
-                                          style: TextStyle(
-                                              fontSize: screenSize.width / 24,
-                                              color: Colors.redAccent,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                      ListTile(
-                                        dense: true,
-                                        leading: SvgPicture.asset(
-                                            'assets/svg/Design/Rectangle.svg',
-                                            color: Colors.greenAccent),
-                                        title: Text(
-                                          'Crédito: R\$ 8.000.00',
-                                          style: TextStyle(
-                                              fontSize: screenSize.width / 24,
-                                              color: Colors.redAccent,
-                                              fontWeight: FontWeight.bold),
-                                        ),
+                                      FutureBuilder(
+                                        future: vmCredit.getCredit(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            return ListTile(
+                                              dense: true,
+                                              leading: SvgPicture.asset(
+                                                  'assets/svg/Design/Rectangle.svg',
+                                                  color: Colors.greenAccent),
+                                              title: Text(
+                                                'Crédito: ' +
+                                                    formatMoneyBr(
+                                                        snapshot.data.value),
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        screenSize.width / 24,
+                                                    color: Colors.redAccent,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            );
+                                          } else {
+                                            return Text(
+                                              'R\$ 0.00',
+                                              style: TextStyle(
+                                                  fontSize:
+                                                      screenSize.width / 24,
+                                                  color: Colors.redAccent,
+                                                  fontWeight: FontWeight.bold),
+                                            );
+                                          }
+                                        },
                                       ),
                                     ],
                                   ),

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:ja_paguei_meus_boletos/app/model/credit.dart';
 import 'package:ja_paguei_meus_boletos/core/constants/string.dart';
+import 'package:ja_paguei_meus_boletos/core/util/format_values.dart';
+
+import 'credit_viewmodel.dart';
 
 class CreditPage extends StatefulWidget {
   @override
@@ -11,8 +15,7 @@ class CreditPage extends StatefulWidget {
 
 class _CreditPageState extends State<CreditPage> {
   final _formKey = new GlobalKey<FormState>();
-  final MoneyMaskedTextController _moneyController =
-      new MoneyMaskedTextController(precision: 2, leftSymbol: 'R\$ ');
+  var vm = CreditViewModel();
 
   @override
   Widget build(BuildContext context) {
@@ -76,21 +79,39 @@ class _CreditPageState extends State<CreditPage> {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 24.0, bottom: 24.0),
-                    child: Text(
-                      'Crédito mês: R\$ 20.000,00',
-                      style: TextStyle(
-                        fontSize: 24.0,
-                        color: Colors.deepPurple,
+                  Observer(
+                    builder: (_) => Padding(
+                      padding: const EdgeInsets.only(top: 24.0, bottom: 24.0),
+                      child: FutureBuilder<Credit>(
+                        future: vm.getCredit(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Text(
+                                'Crédito mês: ' + formatMoneyBr(snapshot.data.value),
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                color: Colors.deepPurple,
+                              ),
+                              textAlign: TextAlign.left,
+                            );
+                          } else {
+                            return Text(
+                              'R\$ 0.00',
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                color: Colors.deepPurple,
+                              ),
+                              textAlign: TextAlign.left,
+                            );
+                          }
+                        },
                       ),
-                      textAlign: TextAlign.left,
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
                     child: TextFormField(
-                      controller: _moneyController,
+                      controller: vm.moneyController,
                       style: TextStyle(fontSize: 24.0),
                       decoration: InputDecoration(
                         labelText: 'Valor',
@@ -101,19 +122,23 @@ class _CreditPageState extends State<CreditPage> {
                       keyboardType:
                           TextInputType.numberWithOptions(decimal: true),
                       validator: (value) {
-                        if (value.isEmpty || value == 'R\$ 0,00')
+                        if (value.isEmpty || value == 'R\$ 0.00')
                           return requiredField;
                         return null;
                       },
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 24.0),
-                    child: FloatingActionButton.extended(
-                      label: Text(saveButton),
-                      onPressed: () {
-                        if (_formKey.currentState.validate()) {}
-                      },
+                  Observer(
+                    builder: (_) => Padding(
+                      padding: const EdgeInsets.only(top: 24.0),
+                      child: FloatingActionButton.extended(
+                        label: Text(saveButton),
+                        onPressed: () {
+                          if (_formKey.currentState.validate()) {
+                            vm.save(0, context);
+                          }
+                        },
+                      ),
                     ),
                   ),
                 ],

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:ja_paguei_meus_boletos/app/ui/paymentSlip/payment_slip_viewmodel.dart';
 import 'package:ja_paguei_meus_boletos/core/constants/string.dart';
-import 'package:ja_paguei_meus_boletos/core/util/format_date.dart';
+import 'package:ja_paguei_meus_boletos/core/util/format_values.dart';
 import 'package:spinner_input/spinner_input.dart';
 
 class PaymentSlipPage extends StatefulWidget {
@@ -17,7 +17,7 @@ class _PaymentSlipPageState extends State<PaymentSlipPage> {
   final _formKey = new GlobalKey<FormState>();
   final TextEditingController _valueController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
-  final MoneyMaskedTextController _moneyController = new MoneyMaskedTextController(precision: 2, decimalSeparator: '.', leftSymbol: 'R\$ ');
+  final MoneyMaskedTextController _moneyController = new MoneyMaskedTextController(initialValue: 0.00, precision: 2, decimalSeparator: '.', leftSymbol: 'R\$ ');
   final TextEditingController _parcelasController = TextEditingController();
 
   @override
@@ -120,7 +120,7 @@ class _PaymentSlipPageState extends State<PaymentSlipPage> {
                       ),
                       keyboardType: TextInputType.numberWithOptions(decimal: true),
                       validator: (value) {
-                        if (value.isEmpty || value == 'R\$ 0,00') return requiredField;
+                        if (value.isEmpty || value == 'R\$ 0.00') return requiredField;
                         return null;
                       },
                     ),
@@ -158,6 +158,7 @@ class _PaymentSlipPageState extends State<PaymentSlipPage> {
                       label: Text(saveButton),
                       onPressed: () {
                         vm.getPaymentSlip();
+                        print(_moneyController.text);
                         if (_formKey.currentState.validate()) {
                           final double value =
                               double.tryParse(_moneyController.text.replaceAll(

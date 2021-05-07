@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ja_paguei_meus_boletos/app/database/app_database.dart';
 import 'package:ja_paguei_meus_boletos/core/constants/string.dart';
 import 'package:ja_paguei_meus_boletos/core/routes/router.dart' as router;
 
@@ -9,6 +10,7 @@ import 'app/ui/splash/splash_page.dart';
 class BoletosApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    getDatabase();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
