@@ -186,6 +186,8 @@ class _FinanceChannelPageState extends State<FinanceChannelPage> {
       case 0:
         break;
       case 1:
+        Navigator.pushNamed(context, '/notifications');
+        break;
         break;
       case 2:
         break;

@@ -158,7 +158,6 @@ class _PaymentSlipPageState extends State<PaymentSlipPage> {
                       label: Text(saveButton),
                       onPressed: () {
                         vm.getPaymentSlip();
-                        print(_moneyController.text);
                         if (_formKey.currentState.validate()) {
                           final double value =
                               double.tryParse(_moneyController.text.replaceAll(

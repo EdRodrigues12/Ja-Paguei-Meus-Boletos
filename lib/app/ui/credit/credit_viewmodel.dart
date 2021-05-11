@@ -19,7 +19,6 @@ abstract class _CreditViewModelBase with Store {
 
   void save(int id, context) async {
     value = double.tryParse(moneyController.text.replaceAll('R\$', ''));
-    print('valor '+value.toString());
     Credit newCredit = Credit(id, value);
     if(await getCredit() == null) {
       creditRepository.save(newCredit).then((id) => Navigator.pop(context));
@@ -40,7 +39,6 @@ abstract class _CreditViewModelBase with Store {
     //   value = list.first.value;
     if(list.isEmpty || list == null)
       return null;
-    print(list);
     return list.first;
   }
 

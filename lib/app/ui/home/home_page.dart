@@ -21,7 +21,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    //initialize all streams controllers and all custom Colors
     for (int i = 0; i < 7; i++) {
       setState(() {
         _customColors.add({

@@ -20,13 +20,13 @@ abstract class _PaymentSlipViewModelBase with Store {
 
     PaymentSlip newPaymentSlip =
         PaymentSlip(id, description, date, value, parcelas);
-    repository.save(newPaymentSlip).then((id) => Navigator.pop(context));
+    repository.save(newPaymentSlip).then((id) => Navigator.pushNamedAndRemoveUntil(
+        context, '/homePage', (route) => false));
   }
 
   @action
   Future<List<PaymentSlip>> getPaymentSlip() async {
     List<PaymentSlip> list = await repository.findAll();
-    print(list);
     return list;
   }
 
@@ -49,8 +49,6 @@ abstract class _PaymentSlipViewModelBase with Store {
       'valueMonth': valueMes,
       'valueTotal': valueTotal,
     };
-    print('values');
-    print(values);
     return values;
   }
 }
