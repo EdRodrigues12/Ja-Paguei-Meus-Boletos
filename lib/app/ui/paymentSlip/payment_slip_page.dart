@@ -17,7 +17,7 @@ class _PaymentSlipPageState extends State<PaymentSlipPage> {
   final _formKey = new GlobalKey<FormState>();
   final TextEditingController _valueController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
-  final MoneyMaskedTextController _moneyController = new MoneyMaskedTextController(initialValue: 0.00, precision: 2, decimalSeparator: '.', leftSymbol: 'R\$ ');
+  final MoneyMaskedTextController _moneyController = new MoneyMaskedTextController(initialValue: 0.00, precision: 2, decimalSeparator: '.', thousandSeparator: '', leftSymbol: 'R\$ ');
   final TextEditingController _parcelasController = TextEditingController();
 
   @override

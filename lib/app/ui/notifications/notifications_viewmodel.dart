@@ -18,28 +18,43 @@ abstract class _NotificationViewModelBase with Store {
     return list;
   }
 
-  Future<void> showNotificationMediaStyle(flutterLocalNotificationsPlugin) async {
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'media channel id',
-      'media channel name',
-      'media channel description',
-      color: Colors.red,
-      enableLights: true,
-      largeIcon: DrawableResourceAndroidBitmap("flutter_devs"),
-      styleInformation: MediaStyleInformation(htmlFormatContent: true, htmlFormatTitle: true),
-    );
-    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-
-    var platformChannelSpecifics = NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-
+  Future<void> showNotificationMediaStyle(
+      flutterLocalNotificationsPlugin) async {
     List<PaymentSlip> list = await getPaymentSlip();
     var dateNow = formatDateBr(DateTime.now());
+    var id = 0;
     for (PaymentSlip payments in list) {
+      var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'media channel id $id',
+        'media channel name $id',
+        'media channel description $id',
+        icon: 'flutter_devs',
+        color: Colors.red,
+        enableLights: true,
+        largeIcon: DrawableResourceAndroidBitmap("flutter_devs"),
+        styleInformation: MediaStyleInformation(
+            htmlFormatContent: true, htmlFormatTitle: true),
+      );
+      var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+
+      var platformChannelSpecifics = NotificationDetails(
+          androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+
       if (formatDateTime(payments.date) == formatDateTime(dateNow)) {
         await flutterLocalNotificationsPlugin.show(
-            0, payments.description, formatMoneyBr(payments.value), platformChannelSpecifics);
+            id,
+            payments.description + ' vence hoje ',
+            'no valor de ' + formatMoneyBr(payments.value),
+            platformChannelSpecifics);
+      } else if (formatDateTime(payments.date) ==
+          formatDateTime(dateNow).add(new Duration(days: 5))) {
+        await flutterLocalNotificationsPlugin.show(
+            id,
+            payments.description + ' vence dia ' + payments.date,
+            ' no valor de ' + formatMoneyBr(payments.value),
+            platformChannelSpecifics);
       }
+      id++;
     }
   }
 

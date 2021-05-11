@@ -552,13 +552,20 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                             );
                                           } else {
-                                            return Text(
-                                              'R\$ 0.00',
-                                              style: TextStyle(
-                                                  fontSize:
-                                                      screenSize.width / 24,
-                                                  color: Colors.redAccent,
-                                                  fontWeight: FontWeight.bold),
+                                            return ListTile(
+                                              dense: true,
+                                              leading: SvgPicture.asset(
+                                                  'assets/svg/Design/Rectangle.svg',
+                                                  color: Colors.greenAccent),
+                                              title: Text(
+                                                'Crédito: R\$ 0.00',
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        screenSize.width / 24,
+                                                    color: Colors.redAccent,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
                                             );
                                           }
                                         },
