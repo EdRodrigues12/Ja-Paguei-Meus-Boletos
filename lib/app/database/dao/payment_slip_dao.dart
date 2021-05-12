@@ -24,6 +24,7 @@ class PaymentSlipDao {
     paymentSlipMap[TablesDataBase.date] = paymentSlip.date;
     paymentSlipMap[TablesDataBase.value] = paymentSlip.value;
     paymentSlipMap[TablesDataBase.parcelas] = paymentSlip.parcelas;
+    paymentSlipMap[TablesDataBase.paid] = paymentSlip.paid;
     return paymentSlipMap;
   }
 
@@ -36,6 +37,7 @@ class PaymentSlipDao {
         row[TablesDataBase.date],
         row[TablesDataBase.value],
         row[TablesDataBase.parcelas],
+        row[TablesDataBase.paid],
       );
       paymentSlips.add(paymentSlip);
     }

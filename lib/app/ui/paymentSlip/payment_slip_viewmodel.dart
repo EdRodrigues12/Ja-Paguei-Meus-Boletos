@@ -19,7 +19,7 @@ abstract class _PaymentSlipViewModelBase with Store {
       parcelas = 0;
 
     PaymentSlip newPaymentSlip =
-        PaymentSlip(id, description, date, value, parcelas);
+        PaymentSlip(id, description, date, value, parcelas, false);
     repository.save(newPaymentSlip).then((id) => Navigator.pushNamedAndRemoveUntil(
         context, '/homePage', (route) => false));
   }

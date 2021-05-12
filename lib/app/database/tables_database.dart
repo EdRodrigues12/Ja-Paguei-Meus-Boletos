@@ -5,7 +5,8 @@ class TablesDataBase {
       '$description TEXT, '
       '$date TEXT, '
       '$value DOUBLE, '
-      '$parcelas INTEGER)';
+      '$parcelas INTEGER,'
+      '$paid BOOLEAN)';
 
   static const String tableCreditsSql = 'CREATE TABLE IF NOT EXISTS $nameTableCredits('
       '$id INTEGER PRIMARY KEY, '
@@ -18,4 +19,5 @@ class TablesDataBase {
   static const String date = 'date';
   static const String value = 'value';
   static const String parcelas = 'parcelas';
+  static const String paid = 'paid';
 }

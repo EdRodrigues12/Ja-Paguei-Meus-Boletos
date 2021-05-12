@@ -81,10 +81,7 @@ class _HomePageState extends State<HomePage> {
                                 flex: 2,
                                 child: InkWell(
                                   onTap: () {
-                                    SnackBar snackBar = new SnackBar(
-                                      content: Text("Em construção!"),
-                                    );
-                                    Scaffold.of(context).showSnackBar(snackBar);
+                                    Navigator.pushNamed(context, '/listPaymentsSlip');
                                   },
                                   splashColor: _customColors[0]['bkg'],
                                   child: Column(
