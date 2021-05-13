@@ -25,9 +25,9 @@ abstract class _NotificationViewModelBase with Store {
     var id = 0;
     for (PaymentSlip payments in list) {
       var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'media channel id $id',
-        'media channel name $id',
-        'media channel description $id',
+        'paymentsslip',
+        'mypaymentsslip',
+        'mypaymentsslip',
         icon: 'flutter_devs',
         color: Colors.red,
         enableLights: true,
@@ -40,21 +40,23 @@ abstract class _NotificationViewModelBase with Store {
       var platformChannelSpecifics = NotificationDetails(
           androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
-      if (formatDateTime(payments.date) == formatDateTime(dateNow)) {
-        await flutterLocalNotificationsPlugin.show(
-            id,
-            payments.description + ' vence hoje ',
-            'no valor de ' + formatMoneyBr(payments.value),
-            platformChannelSpecifics);
-      } else if (formatDateTime(payments.date) ==
-          formatDateTime(dateNow).add(new Duration(days: 5))) {
-        await flutterLocalNotificationsPlugin.show(
-            id,
-            payments.description + ' vence dia ' + payments.date,
-            ' no valor de ' + formatMoneyBr(payments.value),
-            platformChannelSpecifics);
+      if (payments.parcelas >= 1) {
+        if (formatDateTime(payments.date) == formatDateTime(dateNow)) {
+          await flutterLocalNotificationsPlugin.show(
+              id,
+              payments.description + ' vence hoje ',
+              'no valor de ' + formatMoneyBr(payments.value),
+              platformChannelSpecifics);
+        } else if (formatDateTime(payments.date).isBefore(
+            formatDateTime(dateNow).add(new Duration(days: 5)))) {
+          await flutterLocalNotificationsPlugin.show(
+              id,
+              payments.description + ' vence dia ' + payments.date,
+              ' no valor de ' + formatMoneyBr(payments.value),
+              platformChannelSpecifics);
+        }
+        id++;
       }
-      id++;
     }
   }
 

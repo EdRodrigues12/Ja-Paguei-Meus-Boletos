@@ -11,6 +11,10 @@ const totalDividas = "Total dividas";
 const requiredField = "Este campo é requerido";
 const saveButton = "Salvar";
 
+const vencimento = "Vencimento: ";
+const parcelas = "Parcelas: ";
+const luck = 'Que sorte você ainda não possui dividas!!!';
+
 // Canais Youtube
 const oPrimoRico = "Canal com dicas de investimentos, finanças, aumento de renda. Comentários sobre ações que estão em alta, e ensinamentos sobre como começar a investir.";
 

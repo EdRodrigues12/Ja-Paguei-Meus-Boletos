@@ -37,7 +37,7 @@ class PaymentSlipDao {
         row[TablesDataBase.date],
         row[TablesDataBase.value],
         row[TablesDataBase.parcelas],
-        row[TablesDataBase.paid],
+        row[TablesDataBase.paid] == 0 ? false : true,
       );
       paymentSlips.add(paymentSlip);
     }
