@@ -12,6 +12,9 @@ class PaymentSlipListPage extends StatefulWidget {
 
 class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
   final vmPayment = PaymentSlipViewModel();
+  var _paymentsSlipList;
+  List<bool> _checkPaid;
+  bool _paidPayment = false;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +22,7 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Boletos'),
+        title: Text( !_paidPayment ? 'Boletos' : 'Qual boleto foi pago'),
       ),
       body: Builder(
         builder: (context) => Container(
@@ -29,6 +32,7 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
             future: vmPayment.getPaymentSlip(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+                _paymentsSlipList = snapshot.data;
                 return ListView.separated(
                   separatorBuilder: (context, i) => Divider(
                     height: 0,
@@ -42,10 +46,17 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
                         children: [
                           ListTile(
                             tileColor: Colors.grey[100],
-                            leading: SvgPicture.asset(
+                            leading: !_paidPayment ? SvgPicture.asset(
                               'assets/svg/Shopping/Wallet3.svg',
                               color: Colors.brown[400],
                               width: screenSize.width / 9,
+                            ) : Checkbox(
+                              value: _checkPaid[i],
+                              onChanged: (bool newValue) {
+                                setState(() {
+                                  _checkPaid[i] = newValue;
+                                });
+                              },
                             ),
                             title: Text(
                               snapshot.data[i].description,
@@ -105,7 +116,11 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
                 icon: Icon(Icons.payments_sharp),
                 tooltip: "Boletos",
                 color: Colors.white,
-                onPressed: () {}),
+                onPressed: () {
+                  setState(() {
+                  _paidPayment = false;
+                  });
+                }),
             IconButton(
                 icon: Icon(Icons.money_off),
                 tooltip: "Meus boletos pagos",
@@ -118,7 +133,13 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
       floatingActionButton: Opacity(
         opacity: 0.8,
         child: new FloatingActionButton(
-          onPressed: () async {},
+          onPressed: () async {
+            setState(() {
+            _checkPaid = new List.generate(_paymentsSlipList.length, (_) => false);
+            _paidPayment = true;
+            });
+            //Navigator.popAndPushNamed(context, '/paidPayments', arguments: _paymentsSlipList);
+          },
           child: Icon(Icons.money_sharp),
           tooltip: "Pagar",
         ),

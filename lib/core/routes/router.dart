@@ -18,6 +18,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => NotificationsPage());
     case '/listPaymentsSlip':
       return MaterialPageRoute(builder: (context) => PaymentSlipListPage());
+    // case '/paidPayments':
+    //   return MaterialPageRoute(builder: (context) => PaymentSlipPaidPage(
+    //       paymentsSlip: settings.arguments,
+    //   ));
     default:
       return MaterialPageRoute(builder: (context) => HomePage());
   }
