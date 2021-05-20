@@ -31,7 +31,7 @@ class CreditDao {
 
   Future<Credit> findId(int id) async {
     final Database db = await getDatabase();
-    final String _where = 'where: $_idCredits = $id';
+    final String _where = '$_idCredits = $id';
     final result = await db.query(TablesDataBase.nameTableCredits, where: _where);
     final credits = _toModel(result.first);
     return credits;

@@ -3,7 +3,7 @@ class PaymentSlip {
   final String description;
   final String date;
   final double value;
-  final int parcelas;
+  int parcelas;
   bool paid = false;
 
   PaymentSlip(

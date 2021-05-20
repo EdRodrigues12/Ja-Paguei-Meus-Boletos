@@ -55,6 +55,8 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
                               onChanged: (bool newValue) {
                                 setState(() {
                                   _checkPaid[i] = newValue;
+                                  vmPayment.update(
+                                      snapshot.data[i].id, newValue, context);
                                 });
                               },
                             ),

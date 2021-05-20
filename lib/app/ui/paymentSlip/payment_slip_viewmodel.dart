@@ -13,15 +13,31 @@ abstract class _PaymentSlipViewModelBase with Store {
   PaymentSlipRepository repository = PaymentSlipRepository();
 
   @action
-  void save(int id, String description, String date, double value,
-      int parcelas, context) {
-    if(parcelas == null)
-      parcelas = 0;
+  void save(int id, String description, String date, double value, int parcelas,
+      context) {
+    if (parcelas == null) parcelas = 0;
 
     PaymentSlip newPaymentSlip =
         PaymentSlip(id, description, date, value, parcelas, false);
-    repository.save(newPaymentSlip).then((id) => Navigator.pushNamedAndRemoveUntil(
-        context, '/homePage', (route) => false));
+    repository.save(newPaymentSlip).then((id) =>
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/homePage', (route) => false));
+  }
+
+  @action
+  Future<void> update(int id, bool paid, context) async {
+    PaymentSlip paymentSlip = await repository.findId(id);
+    print(paymentSlip);
+    if (paid) {
+      paymentSlip.paid = paid;
+      paymentSlip.parcelas = paymentSlip.parcelas - 1;
+      print(paymentSlip);
+      repository.update(paymentSlip);
+    } else {
+      paymentSlip.paid = paid;
+      paymentSlip.parcelas = paymentSlip.parcelas + 1;
+      repository.update(paymentSlip);
+    }
   }
 
   @action

@@ -8,6 +8,14 @@ class PaymentSlipRepository {
     return _dao.save(paymentSlip);
   }
 
+  Future<int> update(PaymentSlip paymentSlip) {
+    return _dao.update(paymentSlip);
+  }
+
+  Future<PaymentSlip> findId(int id) async {
+    return _dao.findId(id);
+  }
+
   Future<List<PaymentSlip>> findAll() async {
     return _dao.findAll();
   }
