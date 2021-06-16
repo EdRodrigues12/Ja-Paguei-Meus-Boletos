@@ -81,7 +81,8 @@ class _HomePageState extends State<HomePage> {
                                 flex: 2,
                                 child: InkWell(
                                   onTap: () {
-                                    Navigator.pushNamed(context, '/listPaymentsSlip');
+                                    Navigator.pushNamed(
+                                        context, '/listPaymentsSlip');
                                   },
                                   splashColor: _customColors[0]['bkg'],
                                   child: Column(
@@ -146,10 +147,8 @@ class _HomePageState extends State<HomePage> {
                                 flex: 2,
                                 child: InkWell(
                                   onTap: () {
-                                    SnackBar snackBar = new SnackBar(
-                                      content: Text("Em construção!"),
-                                    );
-                                    Scaffold.of(context).showSnackBar(snackBar);
+                                    Navigator.pushNamed(
+                                        context, '/paidPayments');
                                   },
                                   splashColor: _customColors[1]['bkg'],
                                   child: Column(
@@ -295,7 +294,7 @@ class _HomePageState extends State<HomePage> {
                           child: ListView(
                             scrollDirection: Axis.horizontal,
                             children: [
-                              SizedBox(
+                              /*SizedBox(
                                 width: 250,
                                 child: Card(
                                   color: Colors.amberAccent[100],
@@ -361,7 +360,7 @@ class _HomePageState extends State<HomePage> {
                                     ],
                                   ),
                                 ),
-                              ),
+                              ),*/
                               SizedBox(
                                 width: 250,
                                 child: Card(
@@ -371,59 +370,86 @@ class _HomePageState extends State<HomePage> {
                                     children: [
                                       Padding(
                                         padding: EdgeInsets.only(top: 10),
-                                        child: Text(valorizacaoDividas,
+                                        child: Text(historicoDividas,
                                             style: TextStyle(
                                                 fontSize: screenSize.width / 20,
                                                 fontWeight: FontWeight.bold)),
                                       ),
-                                      ListTile(
-                                        dense: true,
-                                        title: Padding(
-                                          padding: const EdgeInsets.all(12.0),
-                                          child: Center(
-                                            child: Text(
-                                              "03/2021",
-                                              style: TextStyle(
-                                                fontSize: screenSize.width / 23,
+                                      FutureBuilder<Map<String, dynamic>>(
+                                        future: vmPayment.getAppreciationDebt(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            return Column(children: [
+                                              ListTile(
+                                                dense: true,
+                                                title: Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      12.0),
+                                                  child: Center(
+                                                    child: Text(
+                                                      formatDateBr(snapshot
+                                                          .data['pastMonth']),
+                                                      style: TextStyle(
+                                                        fontSize:
+                                                            screenSize.width /
+                                                                23,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                subtitle: Center(
+                                                  child: Text(
+                                                    formatMoneyBr(snapshot.data[
+                                                        'valuePastMonth']),
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            screenSize.width /
+                                                                24,
+                                                        color: Colors.redAccent,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                        ),
-                                        subtitle: Center(
-                                          child: Text(
-                                            'R\$ 6.000.00',
-                                            style: TextStyle(
-                                                fontSize: screenSize.width / 24,
-                                                color: Colors.redAccent,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ),
-                                      ListTile(
-                                        dense: true,
-                                        title: Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 12.0,
-                                              right: 12.0,
-                                              bottom: 12.0),
-                                          child: Center(
-                                            child: Text(
-                                              "04/2021",
-                                              style: TextStyle(
-                                                  fontSize:
-                                                      screenSize.width / 23),
-                                            ),
-                                          ),
-                                        ),
-                                        subtitle: Center(
-                                          child: Text(
-                                            'R\$ 5.000.00',
-                                            style: TextStyle(
-                                                fontSize: screenSize.width / 24,
-                                                color: Colors.redAccent,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
+                                              ListTile(
+                                                dense: true,
+                                                title: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 12.0,
+                                                          right: 12.0,
+                                                          bottom: 12.0),
+                                                  child: Center(
+                                                    child: Text(
+                                                      formatDateBr(
+                                                          snapshot.data[
+                                                              'currentMonth']),
+                                                      style: TextStyle(
+                                                          fontSize:
+                                                              screenSize.width /
+                                                                  23),
+                                                    ),
+                                                  ),
+                                                ),
+                                                subtitle: Center(
+                                                  child: Text(
+                                                    formatMoneyBr(snapshot.data[
+                                                        'valueCurrentMonth']),
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            screenSize.width /
+                                                                24,
+                                                        color: Colors.redAccent,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ),
+                                            ]);
+                                          } else {
+                                            return SizedBox();
+                                          }
+                                        },
                                       ),
                                     ],
                                   ),
@@ -457,7 +483,7 @@ class _HomePageState extends State<HomePage> {
                                                   title: Text(
                                                     'Geral: ' +
                                                         formatMoneyBr(snapshot
-                                                            .data.values.first),
+                                                            .data.values.last),
                                                     style: TextStyle(
                                                         fontSize:
                                                             screenSize.width /
@@ -475,7 +501,7 @@ class _HomePageState extends State<HomePage> {
                                                   title: Text(
                                                     'Mês: ' +
                                                         formatMoneyBr(snapshot
-                                                            .data.values.last),
+                                                            .data.values.first),
                                                     style: TextStyle(
                                                         fontSize:
                                                             screenSize.width /

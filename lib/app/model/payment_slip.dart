@@ -1,7 +1,7 @@
 class PaymentSlip {
   final int id;
   final String description;
-  final String date;
+  String date;
   final double value;
   int parcelas;
   bool paid = false;

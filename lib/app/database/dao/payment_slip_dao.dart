@@ -4,8 +4,8 @@ import 'package:ja_paguei_meus_boletos/app/database/app_database.dart';
 import 'package:ja_paguei_meus_boletos/app/database/tables_database.dart';
 
 class PaymentSlipDao {
-
   final _idPaymentSlip = TablesDataBase.id;
+  final _paidPaymentSlip = TablesDataBase.paid;
 
   Future<int> save(PaymentSlip paymentSlip) async {
     final Database db = await getDatabase();
@@ -19,12 +19,14 @@ class PaymentSlipDao {
     final String _where = '$_idPaymentSlip = $id';
 
     Map<String, dynamic> paymentSlipMap = _toMap(paymentSlip);
-    return db.update(TablesDataBase.nameTablePayment, paymentSlipMap, where: _where);
+    return db.update(TablesDataBase.nameTablePayment, paymentSlipMap,
+        where: _where);
   }
 
   Future<List<PaymentSlip>> findAll() async {
     final Database db = await getDatabase();
-    final List<Map<String, dynamic>> result = await db.query(TablesDataBase.nameTablePayment);
+    final List<Map<String, dynamic>> result =
+        await db.query(TablesDataBase.nameTablePayment);
     print(result);
     List<PaymentSlip> paymentSlips = _toList(result);
     return paymentSlips;
@@ -33,10 +35,21 @@ class PaymentSlipDao {
   Future<PaymentSlip> findId(int id) async {
     final Database db = await getDatabase();
     final String _where = '$_idPaymentSlip = $id';
-    final result = await db.query(TablesDataBase.nameTablePayment, where: _where);
+    final result =
+        await db.query(TablesDataBase.nameTablePayment, where: _where);
     print(result);
     final paymentSlip = _toModel(result.first);
     return paymentSlip;
+  }
+
+  Future<List<PaymentSlip>> getPaidPayments() async {
+    final Database db = await getDatabase();
+    final String _where = '$_paidPaymentSlip = 1';
+    final List<Map<String, dynamic>> result =
+    await db.query(TablesDataBase.nameTablePayment, where: _where);
+    print(result);
+    List<PaymentSlip> paymentSlips = _toList(result);
+    return paymentSlips;
   }
 
   Map<String, dynamic> _toMap(PaymentSlip paymentSlip) {

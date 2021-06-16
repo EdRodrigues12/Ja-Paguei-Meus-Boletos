@@ -22,7 +22,7 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text( !_paidPayment ? 'Boletos' : 'Qual boleto foi pago'),
+        title: Text(!_paidPayment ? 'Boletos' : 'Qual boleto foi pago'),
       ),
       body: Builder(
         builder: (context) => Container(
@@ -46,20 +46,24 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
                         children: [
                           ListTile(
                             tileColor: Colors.grey[100],
-                            leading: !_paidPayment ? SvgPicture.asset(
-                              'assets/svg/Shopping/Wallet3.svg',
-                              color: Colors.brown[400],
-                              width: screenSize.width / 9,
-                            ) : Checkbox(
-                              value: _checkPaid[i],
-                              onChanged: (bool newValue) {
-                                setState(() {
-                                  _checkPaid[i] = newValue;
-                                  vmPayment.update(
-                                      snapshot.data[i].id, newValue, context);
-                                });
-                              },
-                            ),
+                            leading: !_paidPayment
+                                ? SvgPicture.asset(
+                                    'assets/svg/Shopping/Wallet3.svg',
+                                    color: Colors.brown[400],
+                                    width: screenSize.width / 9,
+                                  )
+                                : Checkbox(
+                                    value: snapshot.data[i].paid == true
+                                        ? true
+                                        : _checkPaid[i],
+                                    onChanged: (bool newValue) {
+                                      setState(() {
+                                        _checkPaid[i] = newValue;
+                                        vmPayment.update(snapshot.data[i].id,
+                                            newValue, context);
+                                      });
+                                    },
+                                  ),
                             title: Text(
                               snapshot.data[i].description,
                               overflow: TextOverflow.ellipsis,
@@ -78,8 +82,12 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
                                 children: [
-                                  Text(
-                                    vencimento + snapshot.data[i].date,
+                                  Text( !_paidPayment
+                                        ? vencimento + snapshot.data[i].date
+                                        : formatDateTime(snapshot.data[i].date)
+                                      .month ==
+                                      DateTime.now().month ? 'Vencimento no próximo mês! Parabéns' : vencimento + snapshot.data[i].date,
+                                   
                                   ),
                                   Text(
                                     parcelas +
@@ -120,7 +128,7 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
                 color: Colors.white,
                 onPressed: () {
                   setState(() {
-                  _paidPayment = false;
+                    _paidPayment = false;
                   });
                 }),
             IconButton(
@@ -137,8 +145,9 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
         child: new FloatingActionButton(
           onPressed: () async {
             setState(() {
-            _checkPaid = new List.generate(_paymentsSlipList.length, (_) => false);
-            _paidPayment = true;
+              _checkPaid =
+                  new List.generate(_paymentsSlipList.length, (_) => false);
+              _paidPayment = true;
             });
             //Navigator.popAndPushNamed(context, '/paidPayments', arguments: _paymentsSlipList);
           },

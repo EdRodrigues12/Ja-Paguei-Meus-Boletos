@@ -19,4 +19,8 @@ class PaymentSlipRepository {
   Future<List<PaymentSlip>> findAll() async {
     return _dao.findAll();
   }
+
+  Future<List<PaymentSlip>> getPaidPayments() async {
+    return _dao.getPaidPayments();
+  }
 }
