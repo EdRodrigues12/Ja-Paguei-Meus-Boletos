@@ -672,7 +672,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-loadUnities() async {
+Future loadUnities() async {
     var list = await vmPayment.getPaidPayments();
     setState(() {
       _streamController.add(list);

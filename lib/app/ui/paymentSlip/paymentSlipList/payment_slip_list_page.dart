@@ -61,18 +61,23 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
                                     color: Colors.brown[400],
                                     width: screenSize.width / 9,
                                   )
-                                : Checkbox(
-                                    value: snapshot.data[i].paid == true
-                                        ? true
-                                        : _checkPaid[i],
-                                    onChanged: (bool newValue) {
+                                : (!snapshot.data[i].paid ||
+                                              (snapshot.data[i].parcelas > 0 &&
+                                                  formatDateTime(snapshot
+                                                              .data[i].date)
+                                                          .month ==
+                                                      DateTime.now().month))
+                                          ? Checkbox(
+                                              value: _checkPaid[i],
+                                    onChanged: (bool newValue)  {
                                       setState(() {
                                         _checkPaid[i] = newValue;
+                                        _paidPayments = false;
                                         vmPayment.update(snapshot.data[i].id,
                                             newValue, context);
                                       });
                                     },
-                                  ),
+                                  ) : SizedBox(),
                             title: Text(
                               snapshot.data[i].description,
                               overflow: TextOverflow.ellipsis,
@@ -95,9 +100,8 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
                                         ? vencimento + snapshot.data[i].date
                                         : formatDateTime(snapshot.data[i].date)
                                       .month ==
-                                      DateTime.now().month && snapshot.data[i].paid ? 'Vencimento no próximo mês! Parabéns' : vencimento + snapshot.data[i].date,
-                                   
-                                  ),
+                                      DateTime.now().month + 1 && snapshot.data[i].paid ? 'Vencimento no próximo mês!' : vencimento + snapshot.data[i].date,
+                                ),
                                   Text(
                                     parcelas +
                                         snapshot.data[i].parcelas.toString(),
@@ -208,7 +212,7 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
                 onPressed: () {
                   setState(() {
                     _paidPayments = true;
-                    _paidPayment = true;
+                    _paidPayment = false;
                   });
                 }),
           ],

@@ -30,11 +30,7 @@ abstract class _PaymentSlipViewModelBase with Store {
     var dataPayment = paymentSlip.date;
     var newDataPayment = formatDateTime(dataPayment);
     if (paid) {
-      if(paymentSlip.parcelas == 0) {
-        paymentSlip.parcelas = paymentSlip.parcelas + 1;
-      } else {
-        paymentSlip.parcelas = paymentSlip.parcelas - 1;
-      }
+      paymentSlip.parcelas = paymentSlip.parcelas - 1;
       paymentSlip.paid = paid;
       paymentSlip.date = formatDateBr(newDataPayment.add(new Duration(days: 30)));
       repository.update(paymentSlip);
