@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:ja_paguei_meus_boletos/app/model/payment_slip.dart';
 import 'package:ja_paguei_meus_boletos/core/util/format_values.dart';
@@ -107,13 +108,15 @@ class _PaymentSlipPaidPageState extends State<PaymentSlipPaidPage> {
                 tooltip: "Boletos",
                 color: Colors.white,
                 onPressed: () {
-                  Navigator.popAndPushNamed(context, '/listPaymentsSlip');
+                  Navigator.popAndPushNamed(context, '/listPaymentsSlip', arguments: false);
                 }),
             IconButton(
                 icon: Icon(Icons.money_off),
                 tooltip: "Meus boletos pagos",
                 color: Colors.white,
-                onPressed: () {}),
+                onPressed: () {
+                  Navigator.popAndPushNamed(context, '/paidPayments');
+                }),
           ],
         ),
       ),
@@ -121,7 +124,9 @@ class _PaymentSlipPaidPageState extends State<PaymentSlipPaidPage> {
       floatingActionButton: Opacity(
         opacity: 0.8,
         child: new FloatingActionButton(
-          onPressed: () async {},
+          onPressed: () async {
+            Navigator.popAndPushNamed(context, '/listPaymentsSlip', arguments: true);
+          },
           child: Icon(Icons.money_sharp),
           tooltip: "Pagar",
         ),
@@ -129,3 +134,4 @@ class _PaymentSlipPaidPageState extends State<PaymentSlipPaidPage> {
     );
   }
 }
+*/

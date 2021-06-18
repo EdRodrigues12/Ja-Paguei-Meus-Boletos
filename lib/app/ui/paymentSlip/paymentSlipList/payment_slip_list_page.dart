@@ -6,8 +6,12 @@ import 'package:flutter_svg/svg.dart';
 import '../payment_slip_viewmodel.dart';
 
 class PaymentSlipListPage extends StatefulWidget {
+  final paidPayments;
+
+  PaymentSlipListPage({Key key, @required this.paidPayments}) : super(key: key);
+
   @override
-  _PaymentSlipListPageState createState() => _PaymentSlipListPageState();
+  _PaymentSlipListPageState createState() => _PaymentSlipListPageState(paidPayments);
 }
 
 class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
@@ -15,6 +19,11 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
   var _paymentsSlipList;
   List<bool> _checkPaid;
   bool _paidPayment = false;
+  bool _paidPayments;
+
+  _PaymentSlipListPageState(paidPayments) {
+    this._paidPayments = paidPayments;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +31,13 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(!_paidPayment ? 'Boletos' : 'Qual boleto foi pago'),
+        title: Text(_paidPayment ? 'Qual boleto foi pago' : _paidPayments ? 'Boletos pago' : 'Boletos'),
       ),
       body: Builder(
         builder: (context) => Container(
           alignment: Alignment.topCenter,
           padding: EdgeInsets.all(16),
-          child: FutureBuilder<List<PaymentSlip>>(
+          child: !_paidPayments ? FutureBuilder<List<PaymentSlip>>(
             future: vmPayment.getPaymentSlip(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -86,8 +95,68 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
                                         ? vencimento + snapshot.data[i].date
                                         : formatDateTime(snapshot.data[i].date)
                                       .month ==
-                                      DateTime.now().month ? 'Vencimento no próximo mês! Parabéns' : vencimento + snapshot.data[i].date,
+                                      DateTime.now().month && snapshot.data[i].paid ? 'Vencimento no próximo mês! Parabéns' : vencimento + snapshot.data[i].date,
                                    
+                                  ),
+                                  Text(
+                                    parcelas +
+                                        snapshot.data[i].parcelas.toString(),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  itemCount: snapshot.data.length,
+                );
+              } else {
+                return Center(
+                  child: Text(
+                    luck,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                );
+              }
+            },
+          ) : FutureBuilder<List<PaymentSlip>>(
+            future: vmPayment.getPaidPayments(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ListView.separated(
+                  separatorBuilder: (context, i) => Divider(
+                    height: 0,
+                    thickness: 2,
+                    color: Colors.white,
+                  ),
+                  itemBuilder: (context, i) {
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                        children: [
+                          ListTile(
+                            tileColor: Colors.grey[100],
+                            title: Text(
+                              snapshot.data[i].description,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TextStyle(
+                                  fontSize: screenSize.width / 23,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Text(
+                              formatMoneyBr(snapshot.data[i].value),
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            trailing: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    vencimento + snapshot.data[i].date,
                                   ),
                                   Text(
                                     parcelas +
@@ -129,13 +198,19 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
                 onPressed: () {
                   setState(() {
                     _paidPayment = false;
+                    _paidPayments = false;
                   });
                 }),
             IconButton(
                 icon: Icon(Icons.money_off),
                 tooltip: "Meus boletos pagos",
                 color: Colors.white,
-                onPressed: () {}),
+                onPressed: () {
+                  setState(() {
+                    _paidPayments = true;
+                    _paidPayment = true;
+                  });
+                }),
           ],
         ),
       ),
@@ -144,12 +219,15 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
         opacity: 0.8,
         child: new FloatingActionButton(
           onPressed: () async {
+            if(_paymentsSlipList == null){
+              _paymentsSlipList = await vmPayment.getPaymentSlip();
+            }
             setState(() {
               _checkPaid =
                   new List.generate(_paymentsSlipList.length, (_) => false);
               _paidPayment = true;
+              _paidPayments = false;
             });
-            //Navigator.popAndPushNamed(context, '/paidPayments', arguments: _paymentsSlipList);
           },
           child: Icon(Icons.money_sharp),
           tooltip: "Pagar",

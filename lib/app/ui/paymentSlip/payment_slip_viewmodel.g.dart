@@ -24,12 +24,29 @@ mixin _$PaymentSlipViewModel on _PaymentSlipViewModelBase, Store {
     return _$getPaymentSlipAsyncAction.run(() => super.getPaymentSlip());
   }
 
+  final _$getPaidPaymentsAsyncAction =
+      AsyncAction('_PaymentSlipViewModelBase.getPaidPayments');
+
+  @override
+  Future<List<PaymentSlip>> getPaidPayments() {
+    return _$getPaidPaymentsAsyncAction.run(() => super.getPaidPayments());
+  }
+
   final _$getTotalDebtAsyncAction =
       AsyncAction('_PaymentSlipViewModelBase.getTotalDebt');
 
   @override
   Future<Map<String, dynamic>> getTotalDebt() {
     return _$getTotalDebtAsyncAction.run(() => super.getTotalDebt());
+  }
+
+  final _$getAppreciationDebtAsyncAction =
+      AsyncAction('_PaymentSlipViewModelBase.getAppreciationDebt');
+
+  @override
+  Future<Map<String, dynamic>> getAppreciationDebt() {
+    return _$getAppreciationDebtAsyncAction
+        .run(() => super.getAppreciationDebt());
   }
 
   final _$_PaymentSlipViewModelBaseActionController =

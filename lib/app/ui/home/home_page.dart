@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -6,6 +7,7 @@ import 'package:ja_paguei_meus_boletos/app/ui/paymentSlip/payment_slip_viewmodel
 import 'home_viewmodel.dart';
 import 'package:ja_paguei_meus_boletos/app/ui/credit/credit_viewmodel.dart';
 import 'package:ja_paguei_meus_boletos/core/util/format_values.dart';
+import 'package:ja_paguei_meus_boletos/app/model/payment_slip.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,6 +20,7 @@ class _HomePageState extends State<HomePage> {
   final vm = HomeViewModel();
   final vmPayment = PaymentSlipViewModel();
   var vmCredit = CreditViewModel();
+  StreamController<List<PaymentSlip>> _streamController;
 
   @override
   void initState() {
@@ -36,8 +39,16 @@ class _HomePageState extends State<HomePage> {
                   : Colors.white
         });
       });
+      _streamController = new StreamController();
+      loadUnities();
       super.initState();
     }
+  }
+
+  @override
+  void dispose() {
+    _streamController.close();
+    super.dispose();
   }
 
   @override
@@ -48,7 +59,7 @@ class _HomePageState extends State<HomePage> {
         MediaQuery.of(context).padding.bottom;
     double safeAreaHorizontal = MediaQuery.of(context).padding.right +
         MediaQuery.of(context).padding.left;
-
+    loadUnities();
     return Scaffold(
       backgroundColor: Color.fromRGBO(228, 230, 239, 1),
       appBar: AppBar(),
@@ -82,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                                 child: InkWell(
                                   onTap: () {
                                     Navigator.pushNamed(
-                                        context, '/listPaymentsSlip');
+                                        context, '/listPaymentsSlip', arguments: false);
                                   },
                                   splashColor: _customColors[0]['bkg'],
                                   child: Column(
@@ -148,7 +159,7 @@ class _HomePageState extends State<HomePage> {
                                 child: InkWell(
                                   onTap: () {
                                     Navigator.pushNamed(
-                                        context, '/paidPayments');
+                                        context, '/listPaymentsSlip', arguments: true);
                                   },
                                   splashColor: _customColors[1]['bkg'],
                                   child: Column(
@@ -172,14 +183,29 @@ class _HomePageState extends State<HomePage> {
                                           color: _customColors[1]['bkg'],
                                           shape: BoxShape.circle,
                                         ),
-                                        child: Center(
-                                          child: Text(
-                                            '2',
-                                            style: TextStyle(
-                                              color: _customColors[1]
-                                                  ['primary'],
-                                            ),
-                                          ),
+                                        child: StreamBuilder<List>(
+                                          stream: _streamController.stream,
+                                          builder: (context, snapshot) {
+                                            if (snapshot.hasData) {
+                                              return Center(
+                                                child: Text(
+                                                  snapshot.data.length.toString(),
+                                                  style: TextStyle(
+                                                      color: _customColors[0]
+                                                      ['primary']),
+                                                ),
+                                              );
+                                            } else {
+                                              return Center(
+                                                child: Text(
+                                                  '',
+                                                  style: TextStyle(
+                                                      color: _customColors[0]
+                                                      ['primary']),
+                                                ),
+                                              );
+                                            }
+                                          },
                                         ),
                                       ),
                                     ],
@@ -644,5 +670,12 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+loadUnities() async {
+    var list = await vmPayment.getPaidPayments();
+    setState(() {
+      _streamController.add(list);
+    });
   }
 }

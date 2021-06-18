@@ -27,7 +27,6 @@ class PaymentSlipDao {
     final Database db = await getDatabase();
     final List<Map<String, dynamic>> result =
         await db.query(TablesDataBase.nameTablePayment);
-    print(result);
     List<PaymentSlip> paymentSlips = _toList(result);
     return paymentSlips;
   }
@@ -37,7 +36,6 @@ class PaymentSlipDao {
     final String _where = '$_idPaymentSlip = $id';
     final result =
         await db.query(TablesDataBase.nameTablePayment, where: _where);
-    print(result);
     final paymentSlip = _toModel(result.first);
     return paymentSlip;
   }
@@ -47,7 +45,6 @@ class PaymentSlipDao {
     final String _where = '$_paidPaymentSlip = 1';
     final List<Map<String, dynamic>> result =
     await db.query(TablesDataBase.nameTablePayment, where: _where);
-    print(result);
     List<PaymentSlip> paymentSlips = _toList(result);
     return paymentSlips;
   }

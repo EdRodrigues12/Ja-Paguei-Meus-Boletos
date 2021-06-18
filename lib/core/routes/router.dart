@@ -5,7 +5,7 @@ import 'package:ja_paguei_meus_boletos/app/ui/home/home_page.dart';
 import 'package:ja_paguei_meus_boletos/app/ui/notifications/notifications_page.dart';
 import 'package:ja_paguei_meus_boletos/app/ui/paymentSlip/paymentSlipList/payment_slip_list_page.dart';
 import 'package:ja_paguei_meus_boletos/app/ui/paymentSlip/payment_slip_page.dart';
-import 'package:ja_paguei_meus_boletos/app/ui/paymentSlip/paidPayment/paid_payment_slip_page.dart';
+/*import 'package:ja_paguei_meus_boletos/app/ui/paymentSlip/paidPayment/paid_payment_slip_page.dart';*/
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -18,9 +18,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case '/notifications':
       return MaterialPageRoute(builder: (context) => NotificationsPage());
     case '/listPaymentsSlip':
-      return MaterialPageRoute(builder: (context) => PaymentSlipListPage());
-     case '/paidPayments':
-      return MaterialPageRoute(builder: (context) => PaymentSlipPaidPage());
+      return MaterialPageRoute(builder: (context) => PaymentSlipListPage(paidPayments: settings.arguments));
+     /*case '/paidPayments':
+      return MaterialPageRoute(builder: (context) => PaymentSlipPaidPage());*/
     default:
       return MaterialPageRoute(builder: (context) => HomePage());
   }
