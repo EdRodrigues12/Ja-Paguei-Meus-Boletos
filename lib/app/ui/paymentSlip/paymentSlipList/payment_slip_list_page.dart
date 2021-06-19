@@ -11,7 +11,8 @@ class PaymentSlipListPage extends StatefulWidget {
   PaymentSlipListPage({Key key, @required this.paidPayments}) : super(key: key);
 
   @override
-  _PaymentSlipListPageState createState() => _PaymentSlipListPageState(paidPayments);
+  _PaymentSlipListPageState createState() =>
+      _PaymentSlipListPageState(paidPayments);
 }
 
 class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
@@ -31,37 +32,42 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_paidPayment ? 'Qual boleto foi pago' : _paidPayments ? 'Boletos pago' : 'Boletos'),
+        title: Text(_paidPayment
+            ? 'Qual boleto foi pago'
+            : _paidPayments
+                ? 'Boletos pago'
+                : 'Boletos'),
       ),
       body: Builder(
         builder: (context) => Container(
           alignment: Alignment.topCenter,
           padding: EdgeInsets.all(16),
-          child: !_paidPayments ? FutureBuilder<List<PaymentSlip>>(
-            future: vmPayment.getPaymentSlip(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                _paymentsSlipList = snapshot.data;
-                return ListView.separated(
-                  separatorBuilder: (context, i) => Divider(
-                    height: 0,
-                    thickness: 2,
-                    color: Colors.white,
-                  ),
-                  itemBuilder: (context, i) {
-                    return SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: Column(
-                        children: [
-                          ListTile(
-                            tileColor: Colors.grey[100],
-                            leading: !_paidPayment
-                                ? SvgPicture.asset(
-                                    'assets/svg/Shopping/Wallet3.svg',
-                                    color: Colors.brown[400],
-                                    width: screenSize.width / 9,
-                                  )
-                                : (!snapshot.data[i].paid ||
+          child: !_paidPayments
+              ? FutureBuilder<List<PaymentSlip>>(
+                  future: vmPayment.getPaymentSlip(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      _paymentsSlipList = snapshot.data;
+                      return ListView.separated(
+                        separatorBuilder: (context, i) => Divider(
+                          height: 0,
+                          thickness: 2,
+                          color: Colors.white,
+                        ),
+                        itemBuilder: (context, i) {
+                          return SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: Column(
+                              children: [
+                                ListTile(
+                                  tileColor: Colors.grey[100],
+                                  leading: !_paidPayment
+                                      ? SvgPicture.asset(
+                                          'assets/svg/Shopping/Wallet3.svg',
+                                          color: Colors.brown[400],
+                                          width: screenSize.width / 9,
+                                        )
+                                      : (!snapshot.data[i].paid ||
                                               (snapshot.data[i].parcelas > 0 &&
                                                   formatDateTime(snapshot
                                                               .data[i].date)
@@ -69,122 +75,143 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
                                                       DateTime.now().month))
                                           ? Checkbox(
                                               value: _checkPaid[i],
-                                    onChanged: (bool newValue)  {
-                                      vmPayment.update(snapshot.data[i].id,
-                                          newValue, context);
-                                      setState(() {
-                                        _checkPaid[i] = newValue;
-                                      });
-                                    },
-                                  ) : SizedBox(),
-                            title: Text(
-                              snapshot.data[i].description,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: TextStyle(
-                                  fontSize: screenSize.width / 23,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Text(
-                              formatMoneyBr(snapshot.data[i].value),
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            onTap: () async {},
-                            trailing: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  Text( !_paidPayment
-                                        ? vencimento + snapshot.data[i].date
-                                        : formatDateTime(snapshot.data[i].date)
-                                      .month ==
-                                      DateTime.now().month + 1 && snapshot.data[i].paid ? 'Vencimento no próximo mês!' : vencimento + snapshot.data[i].date,
+                                              onChanged: (bool newValue) {
+                                                vmPayment.update(
+                                                    snapshot.data[i].id,
+                                                    newValue,
+                                                    context);
+                                                setState(() {
+                                                  _checkPaid[i] = newValue;
+                                                });
+                                              },
+                                            )
+                                          : SvgPicture.asset(
+                                              'assets/svg/Code/Lock-circle.svg',
+                                              color: Colors.lightGreen,
+                                              width: screenSize.width / 9,
+                                            ),
+                                  title: Text(
+                                    snapshot.data[i].description,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontSize: screenSize.width / 23,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  subtitle: Text(
+                                    formatMoneyBr(snapshot.data[i].value),
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  onTap: () async {},
+                                  trailing: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          !_paidPayment
+                                              ? vencimento +
+                                                  snapshot.data[i].date
+                                              : formatDateTime(snapshot
+                                                                  .data[i].date)
+                                                              .month ==
+                                                          DateTime.now().month +
+                                                              1 &&
+                                                      snapshot.data[i].paid
+                                                  ? 'Vencimento no próximo mês!'
+                                                  : vencimento +
+                                                      snapshot.data[i].date,
+                                        ),
+                                        Text(
+                                          parcelas +
+                                              snapshot.data[i].parcelas
+                                                  .toString(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                                  Text(
-                                    parcelas +
-                                        snapshot.data[i].parcelas.toString(),
-                                  ),
-                                ],
-                              ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    );
+                          );
+                        },
+                        itemCount: snapshot.data.length,
+                      );
+                    } else {
+                      return Center(
+                        child: Text(
+                          luck,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      );
+                    }
                   },
-                  itemCount: snapshot.data.length,
-                );
-              } else {
-                return Center(
-                  child: Text(
-                    luck,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                );
-              }
-            },
-          ) : FutureBuilder<List<PaymentSlip>>(
-            future: vmPayment.getPaidPayments(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView.separated(
-                  separatorBuilder: (context, i) => Divider(
-                    height: 0,
-                    thickness: 2,
-                    color: Colors.white,
-                  ),
-                  itemBuilder: (context, i) {
-                    return SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: Column(
-                        children: [
-                          ListTile(
-                            tileColor: Colors.grey[100],
-                            title: Text(
-                              snapshot.data[i].description,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: TextStyle(
-                                  fontSize: screenSize.width / 23,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Text(
-                              formatMoneyBr(snapshot.data[i].value),
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            trailing: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    vencimento + snapshot.data[i].date,
+                )
+              : FutureBuilder<List<PaymentSlip>>(
+                  future: vmPayment.getPaidPayments(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.separated(
+                        separatorBuilder: (context, i) => Divider(
+                          height: 0,
+                          thickness: 2,
+                          color: Colors.white,
+                        ),
+                        itemBuilder: (context, i) {
+                          return SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: Column(
+                              children: [
+                                ListTile(
+                                  tileColor: Colors.grey[100],
+                                  leading: Icon(Icons.check,color: Colors.lightGreen,),
+                                  title: Text(
+                                    snapshot.data[i].description,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontSize: screenSize.width / 23,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                  Text(
-                                    parcelas +
-                                        snapshot.data[i].parcelas.toString(),
+                                  subtitle: Text(
+                                    formatMoneyBr(snapshot.data[i].value),
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ],
-                              ),
+                                  trailing: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          vencimento + snapshot.data[i].date,
+                                        ),
+                                        Text(
+                                          parcelas +
+                                              snapshot.data[i].parcelas
+                                                  .toString(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    );
+                          );
+                        },
+                        itemCount: snapshot.data.length,
+                      );
+                    } else {
+                      return Center(
+                        child: Text(
+                          luck,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      );
+                    }
                   },
-                  itemCount: snapshot.data.length,
-                );
-              } else {
-                return Center(
-                  child: Text(
-                    luck,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                );
-              }
-            },
-          ),
+                ),
         ),
       ),
       bottomNavigationBar: BottomAppBar(
@@ -222,7 +249,7 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
         opacity: 0.8,
         child: new FloatingActionButton(
           onPressed: () async {
-            if(_paymentsSlipList == null){
+            if (_paymentsSlipList == null) {
               _paymentsSlipList = await vmPayment.getPaymentSlip();
             }
             setState(() {

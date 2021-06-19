@@ -66,8 +66,10 @@ class _HomePageState extends State<HomePage> {
         MediaQuery.of(context).padding.left;
     return Scaffold(
       backgroundColor: Color.fromRGBO(228, 230, 239, 1),
-      appBar: AppBar(),
-      drawer: Drawer(),
+      appBar: AppBar(
+        title: Center(child: Text('Já paguei meus boletos')),
+      ),
+      //drawer: Drawer(),
       body: Builder(
         builder: (context) => Stack(children: [
           Container(
