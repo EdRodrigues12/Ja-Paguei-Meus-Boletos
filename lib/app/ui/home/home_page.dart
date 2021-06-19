@@ -40,7 +40,12 @@ class _HomePageState extends State<HomePage> {
         });
       });
       _streamController = new StreamController();
-      loadUnities();
+      Timer.periodic(Duration(seconds: 10), (_) {
+        if (mounted) {
+          loadPaidSlips();
+        }
+      });
+      loadPaidSlips();
       super.initState();
     }
   }
@@ -59,7 +64,6 @@ class _HomePageState extends State<HomePage> {
         MediaQuery.of(context).padding.bottom;
     double safeAreaHorizontal = MediaQuery.of(context).padding.right +
         MediaQuery.of(context).padding.left;
-    loadUnities();
     return Scaffold(
       backgroundColor: Color.fromRGBO(228, 230, 239, 1),
       appBar: AppBar(),
@@ -672,7 +676,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-Future loadUnities() async {
+Future loadPaidSlips() async {
     var list = await vmPayment.getPaidPayments();
     setState(() {
       _streamController.add(list);

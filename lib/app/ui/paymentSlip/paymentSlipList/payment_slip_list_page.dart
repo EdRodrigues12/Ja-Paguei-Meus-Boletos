@@ -70,11 +70,10 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
                                           ? Checkbox(
                                               value: _checkPaid[i],
                                     onChanged: (bool newValue)  {
+                                      vmPayment.update(snapshot.data[i].id,
+                                          newValue, context);
                                       setState(() {
                                         _checkPaid[i] = newValue;
-                                        _paidPayments = false;
-                                        vmPayment.update(snapshot.data[i].id,
-                                            newValue, context);
                                       });
                                     },
                                   ) : SizedBox(),
