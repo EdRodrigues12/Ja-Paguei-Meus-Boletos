@@ -1,5 +1,9 @@
 import 'package:ja_paguei_meus_boletos/app/model/payment_slip.dart';
+import 'package:ja_paguei_meus_boletos/app/model/paid_payment_slip.dart';
+import 'package:ja_paguei_meus_boletos/app/model/history_payment_slip.dart';
 import 'package:ja_paguei_meus_boletos/app/repository/payment_slip_repository.dart';
+import 'package:ja_paguei_meus_boletos/app/repository/paid_payment_slip_repository.dart';
+import 'package:ja_paguei_meus_boletos/app/repository/history_payment_slip_repository.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/material.dart';
 import 'package:ja_paguei_meus_boletos/core/util/format_values.dart';
@@ -11,6 +15,8 @@ class PaymentSlipViewModel = _PaymentSlipViewModelBase
 
 abstract class _PaymentSlipViewModelBase with Store {
   PaymentSlipRepository repository = PaymentSlipRepository();
+  HistoryPaymentSlipRepository repositoryHistory = HistoryPaymentSlipRepository();
+  PaidPaymentSlipRepository repositoryPaid = PaidPaymentSlipRepository();
 
   @action
   void save(int id, String description, String date, double value, int parcelas,
@@ -19,9 +25,14 @@ abstract class _PaymentSlipViewModelBase with Store {
 
     PaymentSlip newPaymentSlip =
         PaymentSlip(id, description, date, value, parcelas, false);
-    repository.save(newPaymentSlip).then((id) =>
-        Navigator.pushNamedAndRemoveUntil(
-            context, '/homePage', (route) => false));
+
+    HistoryPaymentSlip historyPaymentSlip =
+    HistoryPaymentSlip(id, description, date, value, parcelas, false);
+
+    repository.save(newPaymentSlip).then((id) => repositoryHistory
+        .save(historyPaymentSlip)
+        .then((id) => Navigator.pushNamedAndRemoveUntil(
+            context, '/homePage', (route) => false)));
   }
 
   @action
@@ -32,8 +43,14 @@ abstract class _PaymentSlipViewModelBase with Store {
     if (paid) {
       paymentSlip.parcelas = paymentSlip.parcelas - 1;
       paymentSlip.paid = paid;
+
+      PaidPaymentSlip newPaymentSlip = PaidPaymentSlip(id, paymentSlip.description,
+          paymentSlip.date, paymentSlip.value, paymentSlip.parcelas, paymentSlip.paid);
+
       paymentSlip.date = formatDateBr(newDataPayment.add(new Duration(days: 30)));
+
       repository.update(paymentSlip);
+      repositoryPaid.save(newPaymentSlip);
     } else {
       paymentSlip.date = formatDateBr(newDataPayment.add(new Duration(days: -30)));
       paymentSlip.paid = paid;
@@ -49,8 +66,8 @@ abstract class _PaymentSlipViewModelBase with Store {
   }
 
   @action
-  Future<List<PaymentSlip>> getPaidPayments() async {
-    List<PaymentSlip> list = await repository.getPaidPayments();
+  Future<List<PaidPaymentSlip>> getPaidPayments() async {
+    List<PaidPaymentSlip> list = await repositoryPaid.getPaidPayments();
     return list;
   }
 
@@ -63,7 +80,7 @@ abstract class _PaymentSlipViewModelBase with Store {
 
     for (PaymentSlip payments in list) {
       if (payments.value != null && payments.parcelas > 0) {
-        if (formatDateTime(payments.date).month == DateTime.now().month)
+        if (formatDateTime(payments.date).month == DateTime.now().month && !payments.paid)
           valueMes = valueMes + (payments.value);
 
         valueTotal = valueTotal + (payments.value);
@@ -78,14 +95,14 @@ abstract class _PaymentSlipViewModelBase with Store {
 
   @action
   Future<Map<String, dynamic>> getAppreciationDebt() async {
-    List<PaymentSlip> list = await getPaymentSlip();
+    List<HistoryPaymentSlip> list = await repositoryHistory.findAll();
     Map<String, dynamic> values;
     var valuePastMonth = 0.00;
     var valueCurrentMonth = 0.00;
     var currentMonth = DateTime.now();
     var pastMonth = DateTime.now().subtract(new Duration(days: 31));
 
-    for (PaymentSlip payments in list) {
+    for (HistoryPaymentSlip payments in list) {
       if (payments.value != null && payments.parcelas > 0) {
         if (formatDateTime(payments.date).month == DateTime.now().month) {
           valueCurrentMonth = valueCurrentMonth + (payments.value);

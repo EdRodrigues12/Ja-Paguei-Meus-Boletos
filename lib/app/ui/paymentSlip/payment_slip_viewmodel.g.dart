@@ -28,7 +28,7 @@ mixin _$PaymentSlipViewModel on _PaymentSlipViewModelBase, Store {
       AsyncAction('_PaymentSlipViewModelBase.getPaidPayments');
 
   @override
-  Future<List<PaymentSlip>> getPaidPayments() {
+  Future<List<PaidPaymentSlip>> getPaidPayments() {
     return _$getPaidPaymentsAsyncAction.run(() => super.getPaidPayments());
   }
 

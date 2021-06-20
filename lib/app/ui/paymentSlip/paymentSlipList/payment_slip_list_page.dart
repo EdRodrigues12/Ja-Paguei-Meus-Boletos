@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ja_paguei_meus_boletos/app/model/payment_slip.dart';
+import 'package:ja_paguei_meus_boletos/app/model/paid_payment_slip.dart';
 import 'package:ja_paguei_meus_boletos/core/util/format_values.dart';
 import 'package:ja_paguei_meus_boletos/core/constants/string.dart';
 import 'package:flutter_svg/svg.dart';
@@ -148,7 +149,7 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
                     }
                   },
                 )
-              : FutureBuilder<List<PaymentSlip>>(
+              : FutureBuilder<List<PaidPaymentSlip>>(
                   future: vmPayment.getPaidPayments(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {

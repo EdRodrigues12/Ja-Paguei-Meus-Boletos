@@ -7,7 +7,7 @@ import 'package:ja_paguei_meus_boletos/app/ui/paymentSlip/payment_slip_viewmodel
 import 'home_viewmodel.dart';
 import 'package:ja_paguei_meus_boletos/app/ui/credit/credit_viewmodel.dart';
 import 'package:ja_paguei_meus_boletos/core/util/format_values.dart';
-import 'package:ja_paguei_meus_boletos/app/model/payment_slip.dart';
+import 'package:ja_paguei_meus_boletos/app/model/paid_payment_slip.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   final vm = HomeViewModel();
   final vmPayment = PaymentSlipViewModel();
   var vmCredit = CreditViewModel();
-  StreamController<List<PaymentSlip>> _streamController;
+  StreamController<List<PaidPaymentSlip>> _streamController;
 
   @override
   void initState() {
@@ -247,7 +247,7 @@ class _HomePageState extends State<HomePage> {
                           child: ListView.builder(
                             scrollDirection:
                                 3 > 1 ? Axis.horizontal : Axis.vertical,
-                            itemCount: 3,
+                            itemCount: 4,
                             itemBuilder: (context, i) {
                               return GestureDetector(
                                 onTap: () async {},

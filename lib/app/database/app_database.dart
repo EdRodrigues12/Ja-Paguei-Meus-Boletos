@@ -9,6 +9,8 @@ Future<Database> getDatabase() async {
     onCreate: (db, version) async{
       await  db.execute(TablesDataBase.tablePaymentsSlipSql);
       await  db.execute(TablesDataBase.tableCreditsSql);
+      await  db.execute(TablesDataBase.tablePaidPaymentsSlipSql);
+      await  db.execute(TablesDataBase.tableHistoryPaymentsSlipSql);
     },
     version: 1,
   );
