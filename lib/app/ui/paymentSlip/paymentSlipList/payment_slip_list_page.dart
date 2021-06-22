@@ -68,7 +68,11 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
                                           color: Colors.brown[400],
                                           width: screenSize.width / 9,
                                         )
-                                      : (!snapshot.data[i].paid ||
+                                      : ((!snapshot.data[i].paid &&
+                                      formatDateTime(snapshot
+                                          .data[i].date)
+                                          .month ==
+                                          DateTime.now().month) ||
                                               (snapshot.data[i].parcelas > 0 &&
                                                   formatDateTime(snapshot
                                                               .data[i].date)
@@ -117,8 +121,7 @@ class _PaymentSlipListPageState extends State<PaymentSlipListPage> {
                                                                   .data[i].date)
                                                               .month ==
                                                           DateTime.now().month +
-                                                              1 &&
-                                                      snapshot.data[i].paid
+                                                              1
                                                   ? 'Vencimento no próximo mês!'
                                                   : vencimento +
                                                       snapshot.data[i].date,

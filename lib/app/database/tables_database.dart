@@ -24,6 +24,7 @@ class TablesDataBase {
       '$id INTEGER PRIMARY KEY, '
       '$description TEXT, '
       '$date TEXT, '
+      '$createDate TEXT, '
       '$value DOUBLE, '
       '$parcelas INTEGER,'
       '$paid BOOLEAN)';
@@ -35,6 +36,7 @@ class TablesDataBase {
   static const String id = 'id';
   static const String description = 'description';
   static const String date = 'date';
+  static const String createDate = 'createDate';
   static const String value = 'value';
   static const String parcelas = 'parcelas';
   static const String paid = 'paid';

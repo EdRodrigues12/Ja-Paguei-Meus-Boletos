@@ -53,6 +53,7 @@ class HistoryPaymentSlipDao {
     final Map<String, dynamic> paymentSlipMap = Map();
     paymentSlipMap[TablesDataBase.description] = paymentSlip.description;
     paymentSlipMap[TablesDataBase.date] = paymentSlip.date;
+    paymentSlipMap[TablesDataBase.createDate] = paymentSlip.createDate;
     paymentSlipMap[TablesDataBase.value] = paymentSlip.value;
     paymentSlipMap[TablesDataBase.parcelas] = paymentSlip.parcelas;
     paymentSlipMap[TablesDataBase.paid] = paymentSlip.paid;
@@ -66,6 +67,7 @@ class HistoryPaymentSlipDao {
         row[TablesDataBase.id],
         row[TablesDataBase.description],
         row[TablesDataBase.date],
+        row[TablesDataBase.createDate],
         row[TablesDataBase.value],
         row[TablesDataBase.parcelas],
         row[TablesDataBase.paid] == 0 ? false : true,
@@ -81,6 +83,7 @@ class HistoryPaymentSlipDao {
       row[TablesDataBase.id],
       row[TablesDataBase.description],
       row[TablesDataBase.date],
+      row[TablesDataBase.createDate],
       row[TablesDataBase.value],
       row[TablesDataBase.parcelas],
       row[TablesDataBase.paid] == 0 ? false : true,

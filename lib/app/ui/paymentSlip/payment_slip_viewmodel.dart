@@ -21,13 +21,14 @@ abstract class _PaymentSlipViewModelBase with Store {
   @action
   void save(int id, String description, String date, double value, int parcelas,
       context) {
+    var createDate = DateTime.now();
     if (parcelas == null) parcelas = 0;
 
     PaymentSlip newPaymentSlip =
         PaymentSlip(id, description, date, value, parcelas, false);
 
     HistoryPaymentSlip historyPaymentSlip =
-    HistoryPaymentSlip(id, description, date, value, parcelas, false);
+    HistoryPaymentSlip(id, description, date, formatDateBr(createDate), value, parcelas, false);
 
     repository.save(newPaymentSlip).then((id) => repositoryHistory
         .save(historyPaymentSlip)
@@ -104,7 +105,8 @@ abstract class _PaymentSlipViewModelBase with Store {
 
     for (HistoryPaymentSlip payments in list) {
       if (payments.value != null && payments.parcelas > 0) {
-        if (formatDateTime(payments.date).month == DateTime.now().month) {
+        if (formatDateTime(payments.date).month == DateTime.now().month ||
+            formatDateTime(payments.createDate).month == DateTime.now().month) {
           valueCurrentMonth = valueCurrentMonth + (payments.value);
         }
 

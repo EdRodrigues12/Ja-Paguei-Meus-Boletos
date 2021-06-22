@@ -2,6 +2,7 @@ class HistoryPaymentSlip {
   final int id;
   final String description;
   String date;
+  String createDate;
   final double value;
   int parcelas;
   bool paid = false;
@@ -10,19 +11,21 @@ class HistoryPaymentSlip {
       this.id,
       this.description,
       this.date,
+      this.createDate,
       this.value,
       this.parcelas,
       this.paid,);
 
   @override
   String toString() {
-    return 'PaymentSlip{id: $id, description: $description, date: $date, value: $value, parcelas: $parcelas, paid: $paid}';
+    return 'PaymentSlip{id: $id, description: $description, date: $date, createDate: $createDate, value: $value, parcelas: $parcelas, paid: $paid}';
   }
 
   HistoryPaymentSlip.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         description = json['description'],
         date = json['date'],
+        createDate = json['createDate'],
         value = json['value'],
         parcelas = json['parcelas'],
         paid = json['paid'];
@@ -30,6 +33,7 @@ class HistoryPaymentSlip {
   Map<String, dynamic> toJson() => {
     'description': description,
     'date': date,
+    'createDate': createDate,
     'value': value,
     'parcelas': parcelas,
     'paid': paid,

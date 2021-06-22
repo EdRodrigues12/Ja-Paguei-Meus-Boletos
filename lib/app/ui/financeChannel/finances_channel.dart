@@ -44,10 +44,11 @@ class _FinanceChannelPageState extends State<FinanceChannelPage> {
                         itemBuilder: (context, i) {
                           return GestureDetector(
                             onTap: () {
-                              SnackBar snackBar = new SnackBar(
-                                content: Text("Em construção!"),
-                              );
-                              Scaffold.of(context).showSnackBar(snackBar);
+                              // SnackBar snackBar = new SnackBar(
+                              //   content: Text("Em construção!"),
+                              // );
+                              // Scaffold.of(context).showSnackBar(snackBar);
+                              vm.launchURL(snapshot.data[i].url);
                             },
                             child: SizedBox(
                               width: 250,
